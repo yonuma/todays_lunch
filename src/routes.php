@@ -7,7 +7,7 @@ use \GuzzleHttp\Client;
 
 
     $app = new \Slim\App;
-    $app->get('/', IndexController::class . ':index');
+    $app->post('/', IndexController::class . ':index');
     $app->run();
 
 
