@@ -27,10 +27,9 @@ class IndexController
             // // 経度
             // $longitude = $event->getLongitude();
 
-            $SendMessage = new MultiMessageBuilder();
-            $TextMessageBuilder = new TextMessageBuilder("ハローワールド");
-            $SendMessage->add($TextMessageBuilder);
-            $Bot->replyMessage($event->getReplyToken(), $SendMessage);
+            $response = $bot->replyMessage(
+                $event->getReplyToken(), new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($event->getText())  
+            );
         }
         
 
