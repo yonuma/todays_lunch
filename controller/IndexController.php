@@ -22,17 +22,9 @@ class IndexController
         $events = $bot->parseEventRequest(file_get_contents('php://input'), $signature);
 
         foreach($events as $event){
-            // 緯度
-            // $latitude = $event->getLatitude();
-            // // 経度
-            // $longitude = $event->getLongitude();
-
-            $response = $bot->replyMessage(
-                $event->getReplyToken(), new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($event->getText())  
-            );
-        }
-        
-
-        
+            $reply_token = $event->getReplyToken();
+            $bot->replyText($reply_token, "TEST!");
+        }       
+       
     }
 }
