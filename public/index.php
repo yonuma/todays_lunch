@@ -5,6 +5,6 @@ use LINE\LINEBot\EchoBot\Setting;
 require_once __DIR__ . '/../vendor/autoload.php';
 $setting = Setting::getSetting();
 $app = new Slim\App($setting);
-(new Dependency())->register($app);
-(new Route())->register($app);
+(new dependencies())->register($app);
+(new routes())->register($app);
 $app->run();
