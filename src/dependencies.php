@@ -18,8 +18,8 @@ class Dependency
         };
         $container['bot'] = function ($c) {
             $settings = $c->get('settings');
-            $channelSecret = CHANNEL_SECRET;
-            $channelToken = ACCESS_TOKEN;
+            $channelSecret = getenv('CHANNEL_SECRET');
+            $channelToken = getenv('ACCESS_TOKEN');
             $bot = new LINEBot(new CurlHTTPClient($channelToken), [
                 'channelSecret' => $channelSecret
             ]);

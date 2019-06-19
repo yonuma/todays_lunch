@@ -1,4 +1,0 @@
-<?php
-
-define('ACCESS_TOKEN', ACCESS_TOKEN);
-define('CHANNEL_SECRET', CHANNEL_SECRET);
