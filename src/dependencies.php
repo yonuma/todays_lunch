@@ -1,6 +1,6 @@
 <?php
 
-namespace LINE\LINEBot\EchoBot;
+namespace EchoBot;
 use LINE\LINEBot;
 use LINE\LINEBot\HTTPClient\CurlHTTPClient;
 class Dependency

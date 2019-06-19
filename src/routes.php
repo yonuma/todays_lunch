@@ -1,5 +1,5 @@
 <?php
-namespace LINE\LINEBot\EchoBot;
+namespace EchoBot;
 use LINE\LINEBot\Constant\HTTPHeader;
 use LINE\LINEBot\Event\MessageEvent;
 use LINE\LINEBot\Event\MessageEvent\TextMessage;

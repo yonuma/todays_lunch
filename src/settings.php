@@ -1,6 +1,6 @@
 <?php
 
-namespace LINE\LINEBot\EchoBot;
+namespace EchoBot;
 class Setting
 {
     public static function getSetting()
