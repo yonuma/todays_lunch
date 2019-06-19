@@ -7,7 +7,6 @@ class Dependency
 {
     public function register(\Slim\App $app)
     {
-        require_once __DIR__ . '/../const.php';
         $container = $app->getContainer();
         $container['logger'] = function ($c) {
             $settings = $c->get('settings')['logger'];
