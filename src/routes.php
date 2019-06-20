@@ -44,7 +44,7 @@ class Route
                 $latitude = $event->getLatitude();
                 $longitude = $event->getLongitude();
                 $logger->info('Reply text: ' . $latitude . ':' . $longitude);
-                $lunchData = getLunch($latitude, $longitude);
+                $lunchData = $this->getLunch($latitude, $longitude);
                 foreach($lunchData->rest as $storeData){
                     $replyText .= $storeData->name;
                 }
