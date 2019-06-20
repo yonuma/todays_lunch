@@ -44,10 +44,11 @@ class Route
                 $latitude = $event->getLatitude();
                 $longitude = $event->getLongitude();
                 $logger->info('Reply text: ' . $latitude . ':' . $longitude);
-                $lunchData = $this->getLunch($latitude, $longitude);
-                foreach($lunchData->rest as $storeData){
-                    $replyText .= $storeData->name;
-                }
+                // $lunchData = $this->getLunch($latitude, $longitude);
+                // foreach($lunchData->rest as $storeData){
+                //     $replyText .= $storeData->name;
+                // }
+                $replyText = $latitude . ':' . $longitude;
                 $resp = $bot->replyText($event->getReplyToken(), $replyText);
                 $logger->info($resp->getHTTPStatus() . ': ' . $resp->getRawBody());
             }
