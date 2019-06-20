@@ -12,7 +12,7 @@ class Route
     const RANGE = 2;
     const LUNCH = 1;
     const CARD  = 1;
-    const HIT   = 10;
+    const HIT   = 5;
     public function register(\Slim\App $app)
     {
         $app->post('/callback', function (\Slim\Http\Request $req, \Slim\Http\Response $res) {
@@ -41,13 +41,12 @@ class Route
                     $logger->info('Non location message has come');
                     continue;
                 }
-                $replyText = $event->getLatitude();
-                // $longitude = $event->getLongitude();
-                // $logger->info('Reply text: ' . $latitude . ':' . $longitude);
-                // $lunchData = $this->getLunch($latitude, $longitude);
-                // foreach($lunchData->rest as $storeData){
-                //     $replyText .= $storeData->name;
-                // }
+                $latitude = $event->getLatitude();
+                $longitude = $event->getLongitude();
+                $lunchData = $this->getLunch($latitude, $longitude);
+                foreach($lunchData->rest as $storeData){
+                    $replyText .= $storeData->name;
+                }
                 $resp = $bot->replyText($event->getReplyToken(), $replyText);
                 $logger->info($resp->getHTTPStatus() . ': ' . $resp->getRawBody());
             }
