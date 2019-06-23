@@ -13,6 +13,7 @@ class Route
     const LUNCH = 1;
     const CARD  = 1;
     const HIT   = 5;
+    const GRNV_ACCESS_KEY = 'accfc6e85b4c25fa6710745bceb3a333';
     public function register(\Slim\App $app)
     {
         $app->post('/callback', function (\Slim\Http\Request $req, \Slim\Http\Response $res) {
@@ -43,9 +44,17 @@ class Route
                 }
                 $latitude = $event->getLatitude();
                 $longitude = $event->getLongitude();
-                $lunchData = $this->getLunch($latitude, $longitude);
-                foreach($lunchData->rest as $storeData){
-                    $replyText .= $storeData->name;
+                $client = new Client([
+                    'base_uri' => 'https://api.gnavi.co.jp/RestSearchAPI/v3/',
+                ]);
+        
+                $method = 'GET';
+                $uri = '?keyid='.self::GRNV_ACCESS_KEY.'&latitude='.$latitude.'&longitude='.$longitude.'&range='.self::RANGE.'&lunch='.self::LUNCH.'&card='.self::CARD.'&hit_per_page='.self::HIT;
+                $response = $client->request($method, $uri);
+                $result = $response->getBody()->getContents();
+                $list = json_decode($result, true);
+                foreach($list["rest"] as $storeData){
+                    $replyText .= $storeData["name"];
                 }
                 $resp = $bot->replyText($event->getReplyToken(), $replyText);
                 $logger->info($resp->getHTTPStatus() . ': ' . $resp->getRawBody());
@@ -55,19 +64,4 @@ class Route
         });
     }
 
-    public function getLunch($latitude, $longitude)
-    {
-        $client = new Client([
-            'base_uri' => 'https://api.gnavi.co.jp/RestSearchAPI/v3/',
-        ]);
-
-        $method = 'GET';
-        $access_key = getenv('GURUNAVI_ACCESS_KEY');
-        $uri = '?keyid='.$access_key.'&latitude='.$latitude.'&longitude='.$longitude.'&range='.self::RANGE.'&lunch='.self::LUNCH.'&card='.self::CARD.'&hit_per_page='.self::HIT;
-        $options = [];
-        $response = $client->request($method, $uri, $options);
-        $list = json_decode($response->getBody()->getContents(), true);
-
-        return $this->response($list);
-    }
 }
