@@ -49,8 +49,8 @@ class Route
                 }
                 $latitude = $event->getLatitude();
                 $longitude = $event->getLongitude();
-                $list = self::getLunch($latitude, $longitude);
-                $carousel_message = self::makeCarousel($list);
+                $list = $this->getLunch($latitude, $longitude);
+                $carousel_message = $this->makeCarousel($list);
                 $message = new MultiMessageBuilder();
                 $message->add($carousel_message);
                 $resp = $bot->replyMessage($event->getReplyToken(), $message);
@@ -67,7 +67,8 @@ class Route
      * @param array $list
      * @return array
      */
-    private function makeCarousel($list){
+    private function makeCarousel($list)
+    {
         $columns = []; // カルーセル型カラムを5つ追加する配列
         foreach($list["rest"] as $storeData){
             // カルーセルに付与するボタンを作る
@@ -91,7 +92,7 @@ class Route
      * @param string $longitude
      * @return array
      */
-    public function getLunch($latitude, $longitude)
+    private function getLunch($latitude, $longitude)
     {
         $client = new Client([
             'base_uri' => 'https://api.gnavi.co.jp/RestSearchAPI/v3/',
