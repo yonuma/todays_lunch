@@ -19,6 +19,13 @@ class Route
     const CARD  = 1;
     const HIT   = 5;
     const GRNV_ACCESS_KEY = 'accfc6e85b4c25fa6710745bceb3a333';
+
+    /**
+     * 実行 function
+     *
+     * @param \Slim\App $app
+     * @return void
+     */
     public function register(\Slim\App $app)
     {
         $app->post('/callback', function (\Slim\Http\Request $req, \Slim\Http\Response $res) {
@@ -49,8 +56,8 @@ class Route
                 }
                 $latitude = $event->getLatitude();
                 $longitude = $event->getLongitude();
-                $list = $this->getLunch($latitude, $longitude);
-                $carousel_message = $this->makeCarousel($list);
+                $list = self::getLunch($latitude, $longitude);
+                $carousel_message = self::makeCarousel($list);
                 $message = new MultiMessageBuilder();
                 $message->add($carousel_message);
                 $resp = $bot->replyMessage($event->getReplyToken(), $message);
@@ -67,7 +74,7 @@ class Route
      * @param array $list
      * @return array
      */
-    private function makeCarousel($list)
+    private static function makeCarousel($list)
     {
         $columns = []; // カルーセル型カラムを5つ追加する配列
         foreach($list["rest"] as $storeData){
@@ -92,7 +99,7 @@ class Route
      * @param string $longitude
      * @return array
      */
-    private function getLunch($latitude, $longitude)
+    private static function getLunch($latitude, $longitude)
     {
         $client = new Client([
             'base_uri' => 'https://api.gnavi.co.jp/RestSearchAPI/v3/',
