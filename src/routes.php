@@ -56,8 +56,31 @@ class Route
                 }
                 $latitude = $event->getLatitude();
                 $longitude = $event->getLongitude();
-                $list = self::getLunch($latitude, $longitude);
-                $carousel_message = self::makeCarousel($list);
+                // $list = $this->getLunch($latitude, $longitude);
+                // $carousel_message = $this->makeCarousel($list);
+                $client = new Client([
+                    'base_uri' => 'https://api.gnavi.co.jp/RestSearchAPI/v3/',
+                ]);
+        
+                $method = 'GET';
+                $uri = '?keyid='.self::GRNV_ACCESS_KEY.'&latitude='.$latitude.'&longitude='.$longitude.'&range='.self::RANGE.'&lunch='.self::LUNCH.'&card='.self::CARD.'&hit_per_page='.self::HIT;
+                $response = $client->request($method, $uri);
+                $result = $response->getBody()->getContents();
+                $list = json_decode($result, true);
+                $columns = []; // カルーセル型カラムを5つ追加する配列
+                foreach($list["rest"] as $storeData){
+                    // カルーセルに付与するボタンを作る
+                    $action = new UriTemplateActionBuilder("詳細を確認する", $storeData["url"]);
+                    $name = mb_strimwidth($storeData["name"], 0, 35, "...", "UTF-8");
+                    $pr = mb_strimwidth($storeData["pr"]["pr_short"], 0, 55, "...", "UTF-8");
+                    // カルーセルのカラムを作成する
+                    $column = new CarouselColumnTemplateBuilder($name, $pr, $storeData["image_url"]["shop_image1"], [$action]);
+                    $columns[] = $column;
+                }
+                // カラムの配列を組み合わせてカルーセルを作成する
+                $carousel = new CarouselTemplateBuilder($columns);
+                // カルーセルを追加してメッセージを作る
+                $carousel_message = new TemplateMessageBuilder("今日のランチ", $carousel);
                 $message = new MultiMessageBuilder();
                 $message->add($carousel_message);
                 $resp = $bot->replyMessage($event->getReplyToken(), $message);
@@ -74,7 +97,7 @@ class Route
      * @param array $list
      * @return array
      */
-    private static function makeCarousel($list)
+    function makeCarousel($list)
     {
         $columns = []; // カルーセル型カラムを5つ追加する配列
         foreach($list["rest"] as $storeData){
@@ -99,7 +122,7 @@ class Route
      * @param string $longitude
      * @return array
      */
-    private static function getLunch($latitude, $longitude)
+    function getLunch($latitude, $longitude)
     {
         $client = new Client([
             'base_uri' => 'https://api.gnavi.co.jp/RestSearchAPI/v3/',
